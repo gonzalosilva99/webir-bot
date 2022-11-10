@@ -17,19 +17,19 @@ client
   .then((response) => console.log(response))
   .catch((error) => console.error(error));
 
-async function findSong(text) {
-  console.log("findSong");
-  const response = await client.search({
+async function fill(title, author, lyrics, language, link) {
+  await client.index({
     index: "songs",
     body: {
-      query: {
-        match: {
-          lyrics: text,
-        },
-      },
+      title,
+      author,
+      lyrics,
+      language,
+      link,
     },
   });
-  return response.hits.hits[0]._source | null;
+
+  await client.indices.refresh({ index: "songs" });
 }
 
-module.exports = { findSong };
+module.exports = { fill };
